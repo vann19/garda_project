@@ -1,36 +1,69 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-## Getting Started
+# SKENARIO 1 — Teman ingin ikut NGODING (collaborator)
 
-First, run the development server:
+
+
+
+SKENARIO 2 — Teman ingin ikut NGODING (collaborator)
+
+Karena kamu sudah menambahkan dia → ini alurnya 🔥
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/username/rental-mobil.git
+cd rental-mobil
+
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Di sisi KAMU (kalau kamu update fitur lagi):
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+git add .
+git commit -m "add fitur booking mobil"
+git push origin main
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
 
-## Learn More
+Di sisi TEMANMU (biar update):
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+git pull origin main
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+# SKENARIO 3 — Kerja rapi ala profesional (REKOMENDASI) — Teman ingin ikut NGODING (collaborator)
 
-## Deploy on Vercel
+Kalau mau kelihatan “anak industri” 😎
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+git checkout -b fitur-booking
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+
+```bash
+git add .
+git commit -m "feat: booking mobil"
+git push origin fitur-booking
+
+```
+
+
+
+```bash
+git fetch
+git checkout fitur-booking
+```
+## Ringkasan super singkat
+
+Lihat fitur
+```bash
+git clone
+```
+Ambil update
+```bash
+git pull
+```
+Lihat branch lain
+```bash
+git fetch
+```
