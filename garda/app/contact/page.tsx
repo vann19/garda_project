@@ -11,7 +11,7 @@ export default function Contact() {
             Hubungi Kami
           </h1>
           <p className="text-gray-600 mb-6">
-            Punya pertanyaan atau ingin bekerja sama?  
+            Punya pertanyaan atau ingin bekerja sama? segera hubungi kamu! 
             Silakan hubungi kami melalui form berikut.
           </p>
 
