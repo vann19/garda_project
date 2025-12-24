@@ -67,3 +67,19 @@ Lihat branch lain
 ```bash
 git fetch
 ```
+
+hapus jejak git
+```bash
+# Pastikan di folder utama "rental mobil"
+cd "/d/PROJECT CODING/rental mobil"
+
+# Hapus .git di subfolder (jika ada)
+rm -rf rentverse-core-service/.git
+rm -rf rentverse-ai-service/.git
+rm -rf frontend/.git
+
+# Kemudian commit ulang
+git add .
+git commit -m "fix: remove subfolder .git and add all files"
+git push origin main
+```
