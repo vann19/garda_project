@@ -23,11 +23,6 @@ git push origin main
 
 ```
 
-Di sisi TEMANMU (biar update):
-
-```bash
-git pull origin main
-```
 
 
 # SKENARIO 3 — Kerja rapi ala profesional (REKOMENDASI) — Teman ingin ikut NGODING (collaborator)
@@ -83,3 +78,15 @@ git add .
 git commit -m "fix: remove subfolder .git and add all files"
 git push origin main
 ```
+
+Ini akan mengembalikan main.dart dan pubspec.yaml ke kondisi awal sebelum Anda mengeditnya.
+
+```bash
+git reset --hard HEAD
+```
+Ini akan menghapus file lib/pages/splash_screen.dart dan file baru lainnya yang Anda buat secara lokal.
+
+```bash
+git clean -fd
+```
+
