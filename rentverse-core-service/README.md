@@ -32,11 +32,35 @@ Kami telah menyiapkan service database otomatis di dalam `docker-compose.yml` ya
 
 ### 3. Jalankan Aplikasi
 
+
 Jalankan perintah berikut untuk membangun dan menyalakan semua service:
 
 ```bash
 docker-compose up -d --build
+docker-compose up
 ```
+
+Jalankan perintah backend
+
+```bash
+docker compose exec app npm run dev
+docker-compose up
+```
+Cara BENAR melihat log backend (INI YANG HARUS KAMU LAKUKAN)
+Opsi 1 — LIHAT LOG backend saja (disarankan)
+
+Ini akan:
+menampilkan log Node.js
+menampilkan error REST API
+menampilkan console.log
+TANPA bikin proses baru
+Kalau ada error controller / route → pasti kelihatan di sini.
+👉 90% kasus, ini sudah cukup.
+Kalau kamu tidak pakai ini, kamu buang waktu.
+```bash
+docker compose logs -f app
+```
+
 
 Proses ini akan menjalankan:
 1.  🐘 **Database**: PostgreSQL dengan PostGIS port `5432` (internal)
