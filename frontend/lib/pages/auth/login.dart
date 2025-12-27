@@ -1,4 +1,8 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:frontend/pages/auth/register.dart';
+import 'package:frontend/pages/home/home.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -11,13 +15,69 @@ class _LoginPageState extends State<LoginPage> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
-  bool isLoading = false;
   bool isPasswordHidden = true;
+  bool isLoading = false;
+
+  Future<void> login() async {
+    if (emailController.text.isEmpty || passwordController.text.isEmpty) {
+      _showMessage("Email dan password wajib diisi");
+      return;
+    }
+
+    setState(() => isLoading = true);
+
+    final url = Uri.parse('http://localhost:3000/api/v1/m/auth/login');
+    // ⬆️ pakai localhost kalau web, 10.0.2.2 kalau emulator Android
+
+    try {
+      final response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          "email": emailController.text.trim(),
+          "password": passwordController.text,
+        }),
+      );
+
+      final data = jsonDecode(response.body);
+
+      if (response.statusCode == 200 && data['success'] == true) {
+        final token = data['data']['token'];
+
+        // 🔐 NANTI token disimpan (SharedPreferences)
+        debugPrint("TOKEN: $token");
+
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => const HomePage()),
+        );
+      } else {
+        _showMessage(data['message'] ?? 'Login gagal');
+      }
+    } catch (e) {
+      _showMessage("Gagal terhubung ke server");
+    } finally {
+      setState(() => isLoading = false);
+    }
+  }
+
+  void _showMessage(String message) {
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
+  }
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF0B2A45), // dark navy background
+      backgroundColor: const Color(0xFF0B2A45),
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
@@ -26,28 +86,31 @@ class _LoginPageState extends State<LoginPage> {
               children: [
                 const SizedBox(height: 24),
 
-                // Logo + App Name
+                // Logo & Title
                 Column(
                   children: [
-                    Image.asset(
-                      'assets/logo.png', // ganti sesuai logo kamu
-                      height: 80,
-                    ),
-                    const SizedBox(height: 12),
+                    Image.asset('assets/images/ss.png', height: 180),
+                    const SizedBox(height: 8),
                     const Text(
-                      'RentEase',
+                      'HELLO! WELCOME BACK',
                       style: TextStyle(
                         fontSize: 26,
                         fontWeight: FontWeight.w700,
                         color: Colors.white,
                       ),
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 6),
+                    const Text(
+                      'Sign in to your Account',
+                      style: TextStyle(fontSize: 18, color: Colors.white70),
                     ),
                   ],
                 ),
 
                 const SizedBox(height: 32),
 
-                // Card Login
+                // Login Card
                 Container(
                   padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
@@ -55,28 +118,11 @@ class _LoginPageState extends State<LoginPage> {
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      const Text(
-                        'HELLO! WELCOME BACK',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w700,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      const Text(
-                        'Sign in to your Account',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 13, color: Colors.black54),
-                      ),
-
-                      const SizedBox(height: 24),
-
                       // Email
                       TextField(
                         controller: emailController,
+                        keyboardType: TextInputType.emailAddress,
                         decoration: InputDecoration(
                           hintText: 'Email',
                           prefixIcon: const Icon(Icons.email_outlined),
@@ -121,45 +167,29 @@ class _LoginPageState extends State<LoginPage> {
 
                       const SizedBox(height: 24),
 
-                      // Sign In Button
+                      // Sign In Button (LOGIN API)
                       SizedBox(
+                        width: double.infinity,
                         height: 48,
                         child: ElevatedButton(
-                          onPressed: () {},
+                          onPressed: isLoading ? null : login,
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(0xFFFF8C32),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(30),
                             ),
                           ),
-                          child: const Text(
-                            'Sign In',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ),
-                      ),
-
-                      const SizedBox(height: 16),
-
-                      const Text(
-                        'Login With',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(fontSize: 12),
-                      ),
-
-                      const SizedBox(height: 12),
-
-                      // Google Login
-                      Center(
-                        child: GestureDetector(
-                          onTap: () {},
-                          child: Image.asset(
-                            'assets/google.png', // icon Google
-                            height: 32,
-                          ),
+                          child: isLoading
+                              ? const CircularProgressIndicator(
+                                  color: Colors.white,
+                                )
+                              : const Text(
+                                  'Sign In',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
                         ),
                       ),
                     ],
@@ -177,7 +207,14 @@ class _LoginPageState extends State<LoginPage> {
                       style: TextStyle(color: Colors.white70),
                     ),
                     GestureDetector(
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const RegisterPage(),
+                          ),
+                        );
+                      },
                       child: const Text(
                         'Sign Up',
                         style: TextStyle(
